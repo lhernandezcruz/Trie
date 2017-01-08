@@ -4,6 +4,7 @@
 // include trie
 #include "trie.hpp"
 
+
 TEST_CASE("Testing Default Constructor")
 {
 	// basically should have size of zero
@@ -16,15 +17,20 @@ TEST_CASE("Testing Insert/Exists SIMPLE")
 	// we should be able to insert words into the trie
 	Trie testingTrie = Trie();
 	
+	
 	// insert he and make sure he is in it
-	testingTrie.insert("he");
-	testingTrie.exists("he");
+	testingTrie.insert("hell");
+	REQUIRE(!testingTrie.exists("he"));
 	REQUIRE(testingTrie.size() == 1);
-	testingTrie.print(std::cout);
+	// testingTrie.print(std::cout);
 
-	// check th
+	// insert help and check if it is in it
+	testingTrie.insert("help");
+	REQUIRE(testingTrie.size() == 2);
+	REQUIRE(testingTrie.exists("help"));
 }
 
+/*
 TEST_CASE("Testing Remove/Exists SIMPLE")
 {
 	// we should be able to insert words into the trie
@@ -41,6 +47,7 @@ TEST_CASE("Testing Remove/Exists SIMPLE")
 	REQUIRE(!testingTrie.remove("hello"));
 	testingTrie.print(std::cout);
 }
+*/
 
 TEST_CASE("Testing Rest of Word")
 {
@@ -48,10 +55,15 @@ TEST_CASE("Testing Rest of Word")
 	Trie testingTrie = Trie();
 
 	// check if hello is in there
+	testingTrie.insert("them");
+	
+	REQUIRE(!testingTrie.exists("the"));
 	testingTrie.insert("the");
-	// testingTrie.insert("them");
-	// testingTrie.insert("they");
+	REQUIRE(testingTrie.exists("them"));
+	testingTrie.insert("they");
+	REQUIRE(testingTrie.exists("they"));
 
-	// check that we can remove it
-	REQUIRE(testingTrie.restOfWord("th") == "the");
+	// look at predicted words
+	 std::cout << testingTrie.restOfWord("th") << std::endl;
 }
+
