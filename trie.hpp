@@ -26,11 +26,13 @@ public:
 
 	/**
 	* \brief			Insert a string into the trie
+	* \param  word	    inserted word
 	*/
 	void insert(std::string word);
 
 	/**
 	* \brief			Check if a string exists in the trie
+	* \param  word	    word being checked in the trie
 	* \return			true if word is in the trie. false otherwise
 	*/
 	bool exists(std::string word);
@@ -45,19 +47,21 @@ public:
 
 	/**
 	* \brief			Remove a string from the trie
+	* \param  word      Word being removed
 	* \return			true if word is removed from trie. false otherwise
 	*/
 	bool remove(std::string word);
 
 	/**
-	* \brief     Gives the size of the trie
-	* \return	 size of trie
+	* \brief			Gives the size of the trie
+	* \return			size of trie
 	*/
 	size_t size() const;
 
 	/**
-	* \brief	 Print out the words in the trie 
-	* \return	 ostream 
+	* \brief			Print out the words in the trie 
+	* \param  out		where to print Trie
+	* \return		    ostream 
 	*/
 	std::ostream& print(std::ostream& out) const;
 private:
@@ -65,15 +69,27 @@ private:
 	std::vector<Node> root_; // pointer to the root Node array
 	size_t size_; // how many words have been put into the trie
 
-	/// return true if the thing inserted before it was the last letter
-	bool subTrieInsert(std::vector<Node>& subNode, std::string word); 
+	/**
+	* \brief			Insert a string into the trie
+	* \param  subNode	which node we are looking to insert word to
+	*         word	    word being inserted
+	*/
+	void subTrieInsert(std::vector<Node>& subNode, std::string word); 
 
-	/// return true if the word exists
+	/**
+	* \brief			Insert a string into a subTrie
+	* \param  subNode	which node we are looking to insert word to
+	*         word	    word being inserted
+	*/
 	bool subTrieExists(std::vector<Node>& subNode, std::string word);
 
-	/// print the rest of the word
-	std::string restOfWord(std::vector<Node>& subNode, std::string prefix
-									,std::string currWords, std::string output);
+	/**
+	* \brief			Insert a string into the trie
+	* \param  subNode	which node we are looking to insert word to
+	*         word	    word being inserted
+	*/
+	std::string restOfWord(const std::vector<Node>& subNode, std::string prefix
+									,std::string currWords, std::string output) const;
 
 	/// NODE DECLARATION
 	struct Node {

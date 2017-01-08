@@ -26,46 +26,59 @@ void Trie::insert(std::string word)
 	}
 }
 
-bool Trie::subTrieInsert(std::vector<Node>& subNode, std::string word)
+void Trie::subTrieInsert(std::vector<Node>& subNode, std::string word)
 {
-	// base case is that we finished adding the word
-	if (word.size() == 0) {
-		++size_;
-		return true;
-	} else {
-		// now we check check if the first letter of the string is 
-		//  in the subNode
-		char firstLetter = word[0]; 
-		std::string rest = word.substr(1);
-
+	// base case is that we are inserting last character
+	if (word.size() == 1) {
+		// search nodes for letter
+		bool found = false;
 		auto i = subNode.begin();
-		while (i!=subNode.end()) {
-			if (i->value_ == firstLetter) {
-				// node already exists here so we just add rest of word
-				bool end = subTrieInsert(i->children_, rest);
-
-				// if it is end of word we will mark at as so
-				if (end) {
+		while (!found && i != subNode.end()) {
+			if (i->value_ == word[0]) {
+				// character is in subNode
+				found = true;
+				if (!i->endOfWord_) {
+					// new word so increment size
+					//  and update end or word
+					++size_;
 					i->endOfWord_ = true;
-				}
-				return false;
+				}	
 			}
 			++i; // move on to next node
 		}
 
-		// character not in trie already so we must add it
-		// create new node for it
-		//  insert rest of word to trie
-		//  add to subNode vector
-		Node insertee = Node(firstLetter);
-		bool end = subTrieInsert(insertee.children_, rest);
-
-		// if it is end of word we will mark at as so
-		if (end) {
+		if (!found) {
+			// add node for character, increment size
+			Node insertee = Node(word[0]);
 			insertee.endOfWord_ = true;
+			subNode.push_back(insertee);
+			++size_;
 		}
-		subNode.push_back(insertee);
-		return false;
+
+	} else {
+		// now we check check if the first char of the string is 
+		//  in the subNodes
+		char firstLetter = word[0]; 
+		std::string rest = word.substr(1);
+
+		bool found = false;
+		auto i = subNode.begin();
+		while (!found && i!=subNode.end()) {
+			if (i->value_ == firstLetter) {
+				// node already exists here so we just add rest of word
+				found = true;
+				subTrieInsert(i->children_, rest);
+			}
+			++i; // move on to next node
+		}
+
+		if (!found) {
+			// character not in subnode
+			//  create node, and insert rest of word
+			Node insertee = Node(firstLetter);
+			subTrieInsert(insertee.children_, rest);
+			subNode.push_back(insertee);
+		}	
 	}
 }
 
@@ -88,6 +101,8 @@ bool Trie::subTrieExists(std::vector<Node>& subNode, std::string word)
 			}
 			++i; // move on to next node
 		}
+
+		// didnt find it
 		return false;
 	}
 	else {
@@ -113,14 +128,15 @@ bool Trie::subTrieExists(std::vector<Node>& subNode, std::string word)
 
 std::string Trie::restOfWord(std::string prefix)
 {
+	// find rest of word
 	std::string output = prefix + ": ";
 	return restOfWord(root_, prefix, "", output);
 }
 
-std::string Trie::restOfWord(std::vector<Node>& subNode, std::string prefix,
-									std::string currWord, std::string output)
+std::string Trie::restOfWord(const std::vector<Node>& subNode, std::string prefix,
+									std::string currWord, std::string output) const
 {
-	// base case is that we finished finding the word
+	// we finished finding the word
 	if (prefix.size() == 0) {
 		// hit end of word
 		// keep searching sub nodes for words
@@ -139,24 +155,18 @@ std::string Trie::restOfWord(std::vector<Node>& subNode, std::string prefix,
 		return output;
 	}
 	else {
-		// now we check check if the first letter of the string is 
-		//  in the subNode
+		// finding our way to the end of the word
 		char firstLetter = prefix[0];
 		std::string rest = prefix.substr(1);
-
-		// check if i is in this level
 		auto i = subNode.begin();
+
 		while (i != subNode.end()) {
 			if (i->value_ == firstLetter) {
-				// check rest of the word
 				currWord += firstLetter;
-				if (i->endOfWord_) {
-					output += currWord;
-					output += " ";
-				}
+				// find rest of word
 				return restOfWord(i->children_, rest, currWord, output);
 			}
-			++i; // move on to next node
+			++i; // keep searching nodes
 		}
 
 		// character not in trie... no suggestions
@@ -176,7 +186,10 @@ size_t Trie::size() const
 
 std::ostream& Trie::print(std::ostream& out) const
 {
-	// to to be implemented (maybe)
+	// find all the words inside the trie
+	std::string blank = "";
+	out << restOfWord(root_, blank, blank, blank);
+	out << std::endl;
 	return out;
 }
 
