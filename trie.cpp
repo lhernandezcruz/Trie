@@ -13,7 +13,7 @@
 ///////////////////////////////////////////////////////////////
 
 Trie::Trie()
-	: root_{ std::vector<Node>() }, size_{ 0 }
+	: root_{ std::map<char, Node>() }, size_{ 0 }
 {
 	// nothing to do here
 }
@@ -26,59 +26,49 @@ void Trie::insert(std::string word)
 	}
 }
 
-void Trie::subTrieInsert(std::vector<Node>& subNode, std::string word)
+void Trie::subTrieInsert(std::map<char, Node>& subNode, std::string word)
 {
 	// base case is that we are inserting last character
 	if (word.size() == 1) {
-		// search nodes for letter
-		bool found = false;
-		auto i = subNode.begin();
-		while (!found && i != subNode.end()) {
-			if (i->value_ == word[0]) {
-				// character is in subNode
-				found = true;
-				if (!i->endOfWord_) {
-					// new word so increment size
-					//  and update end or word
-					++size_;
-					i->endOfWord_ = true;
-				}	
-			}
-			++i; // move on to next node
-		}
+		// search nodes for character
+		auto found = subNode.find(word[0]);
 
-		if (!found) {
-			// add node for character, increment size
+		if (found != subNode.end()) {
+			// character is in the map
+			if (!found->second.endOfWord_) {
+				// character was not end of word. so we mark it as so
+				//  and increment size
+				found->second.endOfWord_ = true;
+				++size_;
+			}
+		}
+		else {
+			// character not inside the map
+			// add pair to map, increment size
 			Node insertee = Node(word[0]);
 			insertee.endOfWord_ = true;
-			subNode.push_back(insertee);
+			subNode.insert({ word[0], insertee });
 			++size_;
 		}
 
 	} else {
-		// now we check check if the first char of the string is 
-		//  in the subNodes
-		char firstLetter = word[0]; 
+		// inserting a word that is longer than 1 char
+
 		std::string rest = word.substr(1);
-
-		bool found = false;
-		auto i = subNode.begin();
-		while (!found && i!=subNode.end()) {
-			if (i->value_ == firstLetter) {
-				// node already exists here so we just add rest of word
-				found = true;
-				subTrieInsert(i->children_, rest);
-			}
-			++i; // move on to next node
+		// check if the first character is inside the map
+		auto found = subNode.find(word[0]);
+		if (found != subNode.end()) {
+			// first char there already
+			//  so we just insert the rest of the word
+			subTrieInsert(found->second.children_, rest);
 		}
-
-		if (!found) {
-			// character not in subnode
-			//  create node, and insert rest of word
-			Node insertee = Node(firstLetter);
+		else {
+			// first char is not inside the map
+			// insert rest of the word and add it to the map
+			Node insertee = Node(word[0]);
 			subTrieInsert(insertee.children_, rest);
-			subNode.push_back(insertee);
-		}	
+			subNode.insert({ word[0], insertee });
+		}
 	}
 }
 
@@ -88,39 +78,25 @@ bool Trie::exists(std::string word)
 	return (word.size() != 0 && subTrieExists(root_, word));
 }
 
-bool Trie::subTrieExists(std::vector<Node>& subNode, std::string word)
+bool Trie::subTrieExists(std::map<char, Node>& subNode, std::string word)
 {
-	// base case is that we have one letter left
-	//  check if it is the end of a word
+	// base case is that we have one letter left to check
 	if (word.size() == 1) {
-		auto i = subNode.begin();
-		while (i != subNode.end()) {
-			if (i->value_ == word[0]) {
-				// check rest of the word
-				return i->endOfWord_;
-			}
-			++i; // move on to next node
-		}
-
-		// didnt find it
-		return false;
+		// need it to be in the map, and be the end of a word
+		auto found = subNode.find(word[0]);
+		return ((found != subNode.end()) && (found->second.endOfWord_));
 	}
 	else {
-		// now we check check if the first letter of the string is 
-		//  in the subNode
-		char firstLetter = word[0];
+		// checking for existance of a word that is longer than 1 char
+
 		std::string rest = word.substr(1);
-
-		// check if i is in this level
-		auto i = subNode.begin();
-		while (i !=subNode.end()) {
-			if (i->value_ == firstLetter) {
-				// check rest of the word
-				return subTrieExists(i->children_, rest);
-			}
-			++i; // move on to next node
+		// check if the first character is in the map
+		auto found = subNode.find(word[0]);
+		if (found != subNode.end()) {
+			// search for rest of word
+			return subTrieExists(found->second.children_, rest);
 		}
-
+		
 		// character not in trie. means word does not exist in trie
 		return false;
 	}
@@ -133,40 +109,35 @@ std::string Trie::restOfWord(std::string prefix)
 	return restOfWord(root_, prefix, "", output);
 }
 
-std::string Trie::restOfWord(const std::vector<Node>& subNode, std::string prefix,
+std::string Trie::restOfWord(const std::map<char, Node>& subNode, std::string prefix,
 									std::string currWord, std::string output) const
 {
-	// we finished finding the word
+	// base case we found the end of the word
 	if (prefix.size() == 0) {
-		// hit end of word
 		// keep searching sub nodes for words
 		auto i = subNode.begin();
 		while (i != subNode.end()) {
-			std::string word =  currWord + i->value_;
-			if (i->endOfWord_) {
+			std::string word =  currWord + i->second.value_;
+			if (i->second.endOfWord_) {
 				// check rest of the word
 				output += word;
 				output += " ";
 			}
 
-			output = restOfWord(i->children_, prefix, word, output);
+			output = restOfWord(i->second.children_, prefix, word, output);
 			++i; // move on to next node
 		}
 		return output;
 	}
 	else {
-		// finding our way to the end of the word
-		char firstLetter = prefix[0];
-		std::string rest = prefix.substr(1);
-		auto i = subNode.begin();
 
-		while (i != subNode.end()) {
-			if (i->value_ == firstLetter) {
-				currWord += firstLetter;
-				// find rest of word
-				return restOfWord(i->children_, rest, currWord, output);
-			}
-			++i; // keep searching nodes
+		// finding our way to the end of the word
+		std::string rest = prefix.substr(1);
+		auto found = subNode.find(prefix[0]);
+		if (found != subNode.end()) {
+			// found first letter. now we move on to rest of the word
+			currWord += prefix[0];
+			return restOfWord(found->second.children_, rest, currWord, output);
 		}
 
 		// character not in trie... no suggestions
@@ -174,6 +145,11 @@ std::string Trie::restOfWord(const std::vector<Node>& subNode, std::string prefi
 	}
 }
 bool Trie::remove(std::string word)
+{
+	return subTrieRemove(root_, word);
+}
+
+bool Trie::subTrieRemove(std::map<char, Node>& subNode, std::string word)
 {
 	// to be implemented
 	return true;
@@ -198,8 +174,26 @@ std::ostream& Trie::print(std::ostream& out) const
 ///////////////////////////////////////////////////////////////
 
 Trie::Node::Node(char val)
-	: value_{ val }, endOfWord_{ false }, children_ {std::vector<Node>()
+	: value_{ val }, endOfWord_{ false }, children_ { std::map<char, Node>()
 }
 {
 	// nothing to do here
+}
+
+bool Trie::Node::operator==(const Node &other) const
+{
+	// value_, endOfWord_, and children_ must be true
+	return (value_ == other.value_
+		&& endOfWord_ == other.endOfWord_
+		&& children_ == other.children_);
+}
+
+bool Trie::Node::operator<(const Node& other) const
+{
+	return (value_ < other.value_);
+}
+
+bool Trie::Node::operator>(const Node& other) const
+{
+	return !(*this < other);
 }

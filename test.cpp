@@ -33,7 +33,8 @@ TEST_CASE("Testing Insert/Exists SIMPLE")
 	REQUIRE(testingTrie.exists("abc"));
 	REQUIRE(testingTrie.size() == 3);
 
-	testingTrie.insert("he");
+	testingTrie.insert("abc");
+	REQUIRE(testingTrie.size() == 3);
 	testingTrie.print(std::cout);
 }
 
@@ -69,10 +70,12 @@ TEST_CASE("Testing Rest of Word")
 	// look at predicted words
 	std::cout << testingTrie.restOfWord("t") << std::endl;
 
+	// add words and check these too
 	testingTrie.insert("a");
-	testingTrie.insert("alphabet");
-	testingTrie.insert("angle");
+	testingTrie.insert("albert");
+	testingTrie.insert("anna");
 	std::cout << testingTrie.restOfWord("a") << std::endl;
 	std::cout << testingTrie.restOfWord("b") << std::endl;
+	testingTrie.print(std::cout);
 }
 

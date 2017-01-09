@@ -12,7 +12,7 @@
 #define TRIE_HPP_INCLUDED 1
 
 #include <string>
-#include <vector>
+#include <map>
 #include <iostream>
 
 class Trie {
@@ -66,7 +66,7 @@ public:
 	std::ostream& print(std::ostream& out) const;
 private:
 	/// private data members
-	std::vector<Node> root_; // pointer to the root Node array
+	std::map<char, Node>root_; // pointer to the root Node array
 	size_t size_; // how many words have been put into the trie
 
 	/**
@@ -74,22 +74,24 @@ private:
 	* \param  subNode	which node we are looking to insert word to
 	*         word	    word being inserted
 	*/
-	void subTrieInsert(std::vector<Node>& subNode, std::string word); 
+	void subTrieInsert(std::map<char, Node>& subNode, std::string word);
 
 	/**
 	* \brief			Insert a string into a subTrie
 	* \param  subNode	which node we are looking to insert word to
 	*         word	    word being inserted
 	*/
-	bool subTrieExists(std::vector<Node>& subNode, std::string word);
+	bool subTrieExists(std::map<char, Node>& subNode, std::string word);
 
 	/**
 	* \brief			Insert a string into the trie
 	* \param  subNode	which node we are looking to insert word to
 	*         word	    word being inserted
 	*/
-	std::string restOfWord(const std::vector<Node>& subNode, std::string prefix
+	std::string restOfWord(const std::map<char, Node>& subNode, std::string prefix
 									,std::string currWords, std::string output) const;
+
+	bool subTrieRemove(std::map<char, Node>& subNode, std::string word);
 
 	/// NODE DECLARATION
 	struct Node {
@@ -104,12 +106,21 @@ private:
 		*/
 		Node(char val);
 
+		bool operator==(const Node &other) const; /// equality operator
+		
+		bool operator<(const Node &other) const;  /// less than operator
+
+		bool operator>(const Node& other) const; /// greater than operator
 	private:
 		friend class Trie;
 
-		char value_; // value of the Node
+		char value_; // value of the node
 		bool endOfWord_; // true if end of a node that represents end of word
-		std::vector<Node> children_; // pointer to array of children array
+		std::map<char, Node> children_; // pointer to array of children array
 	};
+
+	
 };
+
+
 #endif
