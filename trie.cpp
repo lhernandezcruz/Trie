@@ -45,7 +45,7 @@ void Trie::subTrieInsert(std::map<char, Node>& subNode, std::string word)
 		else {
 			// character not inside the map
 			// add pair to map, increment size
-			Node insertee = Node(word[0]);
+			Node insertee = Node();
 			insertee.endOfWord_ = true;
 			subNode.insert({ word[0], insertee });
 			++size_;
@@ -65,7 +65,7 @@ void Trie::subTrieInsert(std::map<char, Node>& subNode, std::string word)
 		else {
 			// first char is not inside the map
 			// insert rest of the word and add it to the map
-			Node insertee = Node(word[0]);
+			Node insertee = Node();
 			subTrieInsert(insertee.children_, rest);
 			subNode.insert({ word[0], insertee });
 		}
@@ -117,7 +117,7 @@ std::string Trie::restOfWord(const std::map<char, Node>& subNode, std::string pr
 		// keep searching sub nodes for words
 		auto i = subNode.begin();
 		while (i != subNode.end()) {
-			std::string word =  currWord + i->second.value_;
+			std::string word =  currWord + i->first;
 			if (i->second.endOfWord_) {
 				// check rest of the word
 				output += word;
@@ -135,7 +135,7 @@ std::string Trie::restOfWord(const std::map<char, Node>& subNode, std::string pr
 		std::string rest = prefix.substr(1);
 		auto found = subNode.find(prefix[0]);
 		if (found != subNode.end()) {
-			// found first letter. now we move on to rest of the word
+			// found first letter. now we move on to rest of word
 			currWord += prefix[0];
 			return restOfWord(found->second.children_, rest, currWord, output);
 		}
@@ -173,27 +173,8 @@ std::ostream& Trie::print(std::ostream& out) const
 ///////////// Node Implementation /////////////////////////////
 ///////////////////////////////////////////////////////////////
 
-Trie::Node::Node(char val)
-	: value_{ val }, endOfWord_{ false }, children_ { std::map<char, Node>()
-}
+Trie::Node::Node()
+	: endOfWord_{ false }, children_ { std::map<char, Node>() }
 {
 	// nothing to do here
-}
-
-bool Trie::Node::operator==(const Node &other) const
-{
-	// value_, endOfWord_, and children_ must be true
-	return (value_ == other.value_
-		&& endOfWord_ == other.endOfWord_
-		&& children_ == other.children_);
-}
-
-bool Trie::Node::operator<(const Node& other) const
-{
-	return (value_ < other.value_);
-}
-
-bool Trie::Node::operator>(const Node& other) const
-{
-	return !(*this < other);
 }

@@ -96,25 +96,14 @@ private:
 	/// NODE DECLARATION
 	struct Node {
 	public:
-		// no default constructor
-		Node() = delete;
-
 		/**
-		* \brief		Parameterized Constructor
-		* \param  val	is the char value of the node
-		*		  end   tells whether node is end of a word
+		* \brief Default Constructor
 		*/
-		Node(char val);
+		Node();
 
-		bool operator==(const Node &other) const; /// equality operator
-		
-		bool operator<(const Node &other) const;  /// less than operator
-
-		bool operator>(const Node& other) const; /// greater than operator
 	private:
-		friend class Trie;
+		friend class Trie; // trie can see private data members
 
-		char value_; // value of the node
 		bool endOfWord_; // true if end of a node that represents end of word
 		std::map<char, Node> children_; // pointer to array of children array
 	};
