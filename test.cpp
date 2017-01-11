@@ -12,6 +12,7 @@ TEST_CASE("Testing Default Constructor")
 	REQUIRE(testingTrie.size() == 0);
 }
 
+
 TEST_CASE("Testing Insert/Exists SIMPLE")
 {
 	// we should be able to insert words into the trie
@@ -40,6 +41,7 @@ TEST_CASE("Testing Insert/Exists SIMPLE")
 	testingTrie.insert("abc");
 	REQUIRE(testingTrie.size() == 3);
 }
+
 
 TEST_CASE("Testing Remove/Exists SIMPLE")
 {
@@ -82,6 +84,7 @@ TEST_CASE("Testing Remove/Exists SIMPLE")
 	testingTrie.print(cout);
 }
 
+
 TEST_CASE("Testing Rest of Word")
 {
 	// we should be able to insert words into the trie
@@ -107,7 +110,14 @@ TEST_CASE("Testing Rest of Word")
 	testingTrie.removeAll();
 	REQUIRE(testingTrie.size()== 0);
 	REQUIRE(testingTrie.totalNodes() == 0);
+
+	testingTrie.insert("yo");
+	testingTrie.insert("you");
+	testingTrie.insert("your");
+	testingTrie.insert("yours");
+	cout << testingTrie.restOfWord("yo") << endl;
 }
+
 
 TEST_CASE("HUGE DICTIONARY")
 { 

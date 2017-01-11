@@ -13,6 +13,8 @@
 
 #include <string>
 #include <map>
+#include <unordered_map>
+#include <memory>
 #include <iostream>
 
 /// how many words we can remove before we remove unused nodes
@@ -158,7 +160,7 @@ private:
 		friend class Trie; // trie can see private data members
 
 		bool endOfWord_; // true if a node represents end of word
-		std::map<char, Node> children_; // map of children nodes
+		std::unordered_map<char, std::shared_ptr<Node> > children_; // map of children nodes
 	};
 	
 	/// private data members
