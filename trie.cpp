@@ -13,7 +13,7 @@
 ///////////////////////////////////////////////////////////////
 
 Trie::Trie()
-	: root_{ std::map<char, Node>() }, size_{ 0 }
+	: root_{ std::map<char, Node>() }, size_{ 0 }, wordsRemoved_{ 0 }
 {
 	// nothing to do here
 }
@@ -130,7 +130,6 @@ std::string Trie::restOfWord(const std::map<char, Node>& subNode, std::string pr
 		return output;
 	}
 	else {
-
 		// finding our way to the end of the word
 		std::string rest = prefix.substr(1);
 		auto found = subNode.find(prefix[0]);
@@ -146,13 +145,94 @@ std::string Trie::restOfWord(const std::map<char, Node>& subNode, std::string pr
 }
 bool Trie::remove(std::string word)
 {
-	return subTrieRemove(root_, word);
+	return unmarkEndOfWord(root_, word);
 }
 
-bool Trie::subTrieRemove(std::map<char, Node>& subNode, std::string word)
+bool Trie::unmarkEndOfWord(std::map<char, Node>& subNode, std::string word)
 {
-	// to be implemented
-	return true;
+	// base case is that we have one letter left to check
+	if (word.size() == 1) {
+		// need it to be in the map, and be the end of a word
+		auto found = subNode.find(word[0]);
+
+		// check if it is the last char in a word
+		bool lastChar = ((found != subNode.end()) && (found->second.endOfWord_));
+		if (lastChar) {
+			// umark as end of word. decrease size
+			found->second.endOfWord_ = false;
+			--size_;
+			++wordsRemoved_;
+			
+			// check if we need to remove unused nodes
+			if (wordsRemoved_ == MAXWORDSREMOVED) {
+				removeUnusedNodes(root_); // removing unused nodes
+				wordsRemoved_ = 0;
+			}
+		
+			// finished unmarking end of word
+			return true;
+		}
+
+		// didnt unmark end of word... return false
+		return false;
+	}
+	else {
+		// checking for existance of a word that is longer than 1 char
+
+		std::string rest = word.substr(1);
+		// check if the first character is in the map
+		auto found = subNode.find(word[0]);
+		if (found != subNode.end()) {
+			// search for rest of word
+			return unmarkEndOfWord(found->second.children_, rest);
+		}
+
+		// character not in trie. means word does not exist in trie
+		return false;
+	}
+}
+
+bool Trie::removeUnusedNodes(std::map<char, Node>& subNode)
+{
+	// try to found end of word
+	auto node = subNode.begin();
+	bool keepNodes = false;
+	while (node != subNode.end()) {
+		// search to see if we need to remove subNode
+		bool keepSubNode = removeUnusedNodes(node->second.children_);
+		
+		// we do not contain end of word... and no child does either
+		if (!node->second.endOfWord_ && !keepSubNode) {
+			node = subNode.erase(node);
+		}
+		else {
+			// contains either an end of word... or a child does
+			//  so we keep this node
+			++node;
+			keepNodes = true;
+		}
+	}
+		
+	// return whether we should keep nodes or not
+	return keepNodes;
+}
+
+size_t Trie::countAllNodes(const std::map<char, Node>& subNode, size_t count) const
+{
+	// count nodes
+	auto found = subNode.begin();
+	while (found != subNode.end()) {
+		// we are a node... so incrememnt count
+		++count;
+
+		// add size of children nodes
+		count += countAllNodes(found->second.children_, 0);
+
+		// search rest of nodes
+		++found;
+	}
+	// return the count
+	return count;
 }
 
 size_t Trie::size() const
@@ -160,6 +240,10 @@ size_t Trie::size() const
 	return size_;
 }
 
+size_t Trie::totalNodes() const
+{
+	return countAllNodes(root_, 0);
+}
 std::ostream& Trie::print(std::ostream& out) const
 {
 	// find all the words inside the trie

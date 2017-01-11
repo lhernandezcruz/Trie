@@ -15,6 +15,8 @@
 #include <map>
 #include <iostream>
 
+/// how many words we can remove before we remove unused nodes
+const size_t MAXWORDSREMOVED = 5; 
 class Trie {
 private:
 	struct Node;
@@ -40,8 +42,8 @@ public:
 	/**
 	* \brief			Tries to guess the rest of the word
 	* \param  prefix    Prefix of the word that is being searched
-	* \return			At most 3? possible words that it could be
-	*					   space if it cant be found in the dictionary
+	* \return			Possible words that prefix could be
+	* 				      format: prefix: predicted words (alphabetical order)
 	*/
 	std::string restOfWord(std::string prefix);
 
@@ -54,9 +56,15 @@ public:
 
 	/**
 	* \brief			Gives the size of the trie
-	* \return			size of trie
+	* \return			amound of 'words' in trie
 	*/
 	size_t size() const;
+
+	/**
+	* \brief			total nodes
+	* \return			amount of nodes in trie
+	*/
+	size_t totalNodes() const;
 
 	/**
 	* \brief			Print out the words in the trie 
@@ -66,8 +74,9 @@ public:
 	std::ostream& print(std::ostream& out) const;
 private:
 	/// private data members
-	std::map<char, Node>root_; // pointer to the root Node array
+	std::map<char, Node> root_; // pointer to the root Node array
 	size_t size_; // how many words have been put into the trie
+	size_t wordsRemoved_; // how many words have been removed
 
 	/**
 	* \brief			Insert a string into the trie
@@ -80,18 +89,43 @@ private:
 	* \brief			Insert a string into a subTrie
 	* \param  subNode	which node we are looking to insert word to
 	*         word	    word being inserted
+	* \return           true if word exists in subTrie
 	*/
 	bool subTrieExists(std::map<char, Node>& subNode, std::string word);
 
 	/**
-	* \brief			Insert a string into the trie
-	* \param  subNode	which node we are looking to insert word to
-	*         word	    word being inserted
+	* \brief			Returns words that contain the input word as a prefix
+	* \param  subNode	which node we are looking to see if word exists
+	*         prefix	word being completed
+	*		  currWord  current word being predicted
+	*		  output    string that will ultimately be returned. 
+	* \return           a string in the format. prefix: predicted words (in alphabetical order)
 	*/
 	std::string restOfWord(const std::map<char, Node>& subNode, std::string prefix
-									,std::string currWords, std::string output) const;
+									,std::string currWord, std::string output) const;
 
-	bool subTrieRemove(std::map<char, Node>& subNode, std::string word);
+	/**
+	* \brief			Insert a string into a subTrie
+	* \param  subNode	which node we are looking to insert word to
+	*         word	    word being inserted
+	* \return           true if word was unmarked (it existed as a word)
+	*/
+	bool unmarkEndOfWord(std::map<char, Node>& subNode, std::string word);
+
+	/**
+	* \brief			Remove Nodes that are not part of words
+	* \param  subNode	which node we are looking for words
+	* \return           true if we should keep the subNode
+	*/
+	bool removeUnusedNodes(std::map<char, Node>& subNode);
+
+	/**
+	* \brief			Counts all the nodes being used
+	* \param  subNode	which node we are counting
+	*		  count     current count of nodes in subNode
+	* \return           total amount of nodes
+	*/
+	size_t countAllNodes(const std::map<char, Node>& subNode, size_t count) const;
 
 	/// NODE DECLARATION
 	struct Node {
