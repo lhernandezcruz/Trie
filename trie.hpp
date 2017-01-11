@@ -16,7 +16,7 @@
 #include <iostream>
 
 /// how many words we can remove before we remove unused nodes
-const size_t MAXWORDSREMOVED = 3; 
+const size_t MAXWORDSREMOVED = 20; 
 class Trie {
 private:
 	struct Node;
@@ -80,9 +80,18 @@ public:
 	size_t totalNodes() const;
 
 	/**
+	* \brief			Print out Statistics of the trie
+	* \param  out		where to print Trie
+	* \return		    ostream with statistics
+	* \note				contains endl at end
+	*/
+	std::ostream& showStatistics(std::ostream& out) const;
+
+	/**
 	* \brief			Print out the words in the trie 
 	* \param  out		where to print Trie
 	* \return		    ostream 
+	* \note				contains endl at end
 	*/
 	std::ostream& print(std::ostream& out) const;
 private:
@@ -124,6 +133,8 @@ private:
 	* \brief			Remove Nodes that are not part of words
 	* \param  subNode	which node we are looking for unused words
 	* \return           true if we should keep the subNode
+	* \note				will only delete unused nodes after a certain
+	*					 amount of times unmarking or when trie is empty
 	*/
 	bool removeUnusedNodes(Node& subNode);
 

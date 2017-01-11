@@ -3,6 +3,7 @@
 
 // include trie
 #include "trie.hpp"
+using namespace std;
 
 TEST_CASE("Testing Default Constructor")
 {
@@ -76,7 +77,9 @@ TEST_CASE("Testing Remove/Exists SIMPLE")
 	testingTrie.remove("you"); // 2
 	REQUIRE(testingTrie.totalNodes() == 11);
 	testingTrie.remove("gg"); // 3 remove. will delete unused nodes
-	REQUIRE(testingTrie.totalNodes() == 7);
+	REQUIRE(testingTrie.totalNodes() == 11);
+	testingTrie.showStatistics(cout);
+	testingTrie.print(cout);
 }
 
 TEST_CASE("Testing Rest of Word")
@@ -104,6 +107,70 @@ TEST_CASE("Testing Rest of Word")
 	testingTrie.removeAll();
 	REQUIRE(testingTrie.size()== 0);
 	REQUIRE(testingTrie.totalNodes() == 0);
-
 }
 
+TEST_CASE("HUGE DICTIONARY")
+{ 
+	// create a testingtrie
+	Trie testingTrie = Trie();
+	// Open provided file
+	ifstream inFile("google-10000-english.txt");
+	if (!inFile) {
+		cerr << "Couldn't open file" << endl;
+	}
+	// Read data from the file, one item per line
+	// and insert each word into the stringTree
+	//  require that each line was actually put into stringTree
+	string line;
+	while (inFile.good()) {
+		getline(inFile, line);
+		testingTrie.insert(line);
+		REQUIRE(testingTrie.exists(line));
+	}
+
+	// require that none have been deleted so far
+	ifstream inFile2("google-10000-english.txt");
+	if (!inFile2) {
+		cerr << "Couldn't open file... rip" << endl;
+	}
+	string line2;
+	while (inFile2.good()) {
+		getline(inFile2, line2);
+		REQUIRE(testingTrie.exists(line2));
+	}
+	testingTrie.showStatistics(cout);
+
+	// require that we can delete all of the words
+	ifstream inFile3("google-10000-english.txt");
+	if (!inFile3) {
+		cerr << "Couldn't open file... rip" << endl;
+	}
+	string line3;
+	size_t totalNodes = testingTrie.totalNodes();
+	size_t removeCount = 0;
+	while (inFile3.good()) {
+		getline(inFile3, line3);
+
+		// make sure it properly removes it
+		REQUIRE(testingTrie.remove(line3));
+		REQUIRE(!testingTrie.exists(line3));
+		++removeCount;
+
+		// check that nodes are removed only everyonce in a while
+		if (removeCount != MAXWORDSREMOVED && !testingTrie.empty()) {
+			// uneeded nodes are not deleted often
+			REQUIRE(totalNodes == testingTrie.totalNodes());
+		}
+		else {
+			// check that nodes have been removed
+			size_t newTotal = testingTrie.totalNodes();
+			REQUIRE(totalNodes > newTotal);
+			totalNodes = newTotal;
+			removeCount = 0;
+		}
+	}
+
+	// check empty and show statistics
+	REQUIRE(testingTrie.empty());
+	testingTrie.showStatistics(cout);
+}

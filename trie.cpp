@@ -258,6 +258,15 @@ size_t Trie::totalNodes() const
 	return countAllNodes(root_, 0);
 }
 
+std::ostream& Trie::showStatistics(std::ostream& out) const
+{
+	out << "Words contained: " << size_;
+	out << ", Total nodes: " << totalNodes();
+	out << ", Words left till removing unused nodes: " << (MAXWORDSREMOVED - wordsRemoved_);
+	out << std::endl;
+	return out;
+}
+
 std::ostream& Trie::print(std::ostream& out) const
 {
 	// find all the words inside the trie
