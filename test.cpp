@@ -50,6 +50,7 @@ TEST_CASE("Testing Remove/Exists SIMPLE")
 	// check that we can remove it
 	REQUIRE(testingTrie.remove("hello")); // 1
 	REQUIRE(testingTrie.size() == 0);
+	REQUIRE(testingTrie.empty());
 	REQUIRE(!testingTrie.exists("hello"));
 	// nodes not removed yet
 	REQUIRE(testingTrie.totalNodes() == 5);
@@ -103,5 +104,11 @@ TEST_CASE("Testing Rest of Word")
 	std::cout << testingTrie.restOfWord("a") << std::endl;
 	std::cout << testingTrie.restOfWord("b") << std::endl;
 	testingTrie.print(std::cout);
+
+	// quick test of remove all
+	testingTrie.removeAll();
+	REQUIRE(testingTrie.size()== 0);
+	REQUIRE(testingTrie.totalNodes() == 0);
+
 }
 
