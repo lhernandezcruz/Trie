@@ -45,8 +45,7 @@ void Trie::subTrieInsert(Node& subNode, std::string word)
 		else {
 			// character not inside the map
 			// add pair to map, increment size
-
-			std::shared_ptr<Node> insertee{ new Node() };
+			std::shared_ptr<Node> insertee{ std::make_shared<Node>(Node()) };
 			insertee->endOfWord_ = true;
 			subNode.children_.insert({ word[0], insertee });
 			++size_;
@@ -67,7 +66,7 @@ void Trie::subTrieInsert(Node& subNode, std::string word)
 		else {
 			// first char is not inside the map
 			// insert rest of the word and add it to the map
-			std::unique_ptr<Node> insertee{ new Node() };
+			std::shared_ptr<Node> insertee{ std::make_shared<Node>(Node()) };
 			subTrieInsert(*insertee, rest);
 			subNode.children_.insert({ word[0], std::move(insertee) });
 		}

@@ -45,7 +45,7 @@ public:
 	* \brief			Tries to guess the rest of the word
 	* \param  prefix    Prefix of the word that is being searched
 	* \return			Possible words that prefix could be
-	* 				      format: prefix: predicted words (alphabetical order)
+	* 				      format: prefix: predicted words
 	*/
 	std::string restOfWord(std::string prefix);
 
@@ -118,7 +118,7 @@ private:
 	*         prefix	word being completed
 	*		  currWord  current word being predicted
 	*		  output    string that will ultimately be returned. 
-	* \return           a string in the format. prefix: predicted words (in alphabetical order)
+	* \return           a string in the format. prefix: predicted words
 	*/
 	std::string restOfWord(const Node& subNode, std::string prefix
 									,std::string currWord, std::string output) const;
