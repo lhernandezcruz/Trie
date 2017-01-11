@@ -47,40 +47,35 @@ TEST_CASE("Testing Remove/Exists SIMPLE")
 
 	testingTrie.insert("hello");
 	REQUIRE(testingTrie.totalNodes() == 5);
+
 	// check that we can remove it
 	REQUIRE(testingTrie.remove("hello")); // 1
 	REQUIRE(testingTrie.size() == 0);
 	REQUIRE(testingTrie.empty());
 	REQUIRE(!testingTrie.exists("hello"));
 	// nodes not removed yet
-	REQUIRE(testingTrie.totalNodes() == 5);
+	REQUIRE(testingTrie.totalNodes() == 0);
 	
 	// cant remove the same word
 	REQUIRE(!testingTrie.remove("hello"));
 
-
-	testingTrie.insert("hell");
-	REQUIRE(testingTrie.remove("hell")); // 2
-	REQUIRE(testingTrie.size() == 0);
-	REQUIRE(testingTrie.totalNodes() == 5);
-
 	// insert stuff to testingTrie
 	testingTrie.insert("he");
-	REQUIRE(testingTrie.totalNodes() == 5);
+	REQUIRE(testingTrie.totalNodes() == 2);
 	testingTrie.insert("abc");
-	REQUIRE(testingTrie.totalNodes() == 8);
+	REQUIRE(testingTrie.totalNodes() == 5);
 	testingTrie.insert("gg");
-	REQUIRE(testingTrie.totalNodes() == 10);
+	REQUIRE(testingTrie.totalNodes() == 7);
 	testingTrie.insert("you");
 	testingTrie.insert("your");
-	REQUIRE(testingTrie.totalNodes() == 14);
+	REQUIRE(testingTrie.totalNodes() == 11);
 
 	// remove words from testingTrie
-	testingTrie.remove("he"); // 3
-	REQUIRE(testingTrie.totalNodes() == 14);
-	testingTrie.remove("you"); // 4
-	REQUIRE(testingTrie.totalNodes() == 14);
-	testingTrie.remove("gg"); // 5 remove. will delete unused nodes
+	testingTrie.remove("he"); // 1
+	REQUIRE(testingTrie.totalNodes() == 11);
+	testingTrie.remove("you"); // 2
+	REQUIRE(testingTrie.totalNodes() == 11);
+	testingTrie.remove("gg"); // 3 remove. will delete unused nodes
 	REQUIRE(testingTrie.totalNodes() == 7);
 }
 

@@ -172,7 +172,7 @@ bool Trie::unmarkEndOfWord(Node& subNode, std::string word)
 			++wordsRemoved_;
 			
 			// check if we need to remove unused nodes
-			if (wordsRemoved_ == MAXWORDSREMOVED) {
+			if (wordsRemoved_ == MAXWORDSREMOVED || empty()) {
 				removeUnusedNodes(root_); // removing unused nodes
 				wordsRemoved_ = 0;
 			}

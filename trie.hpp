@@ -16,7 +16,7 @@
 #include <iostream>
 
 /// how many words we can remove before we remove unused nodes
-const size_t MAXWORDSREMOVED = 5; 
+const size_t MAXWORDSREMOVED = 3; 
 class Trie {
 private:
 	struct Node;
