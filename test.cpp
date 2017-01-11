@@ -113,14 +113,15 @@ TEST_CASE("HUGE DICTIONARY")
 { 
 	// create a testingtrie
 	Trie testingTrie = Trie();
+
 	// Open provided file
 	ifstream inFile("google-10000-english.txt");
 	if (!inFile) {
 		cerr << "Couldn't open file" << endl;
 	}
 	// Read data from the file, one item per line
-	// and insert each word into the stringTree
-	//  require that each line was actually put into stringTree
+	// and insert each word into the testingTrie
+	//  require that each line was actually put into testingTrie
 	string line;
 	while (inFile.good()) {
 		getline(inFile, line);
