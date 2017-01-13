@@ -12,6 +12,7 @@ TEST_CASE("Testing Default Constructor")
 	REQUIRE(testingTrie.size() == 0);
 }
 
+
 TEST_CASE("Testing Insert/Exists SIMPLE")
 {
 	// we should be able to insert words into the trie
@@ -40,6 +41,7 @@ TEST_CASE("Testing Insert/Exists SIMPLE")
 	testingTrie.insert("abc");
 	REQUIRE(testingTrie.size() == 3);
 }
+
 
 TEST_CASE("Testing Remove/Exists SIMPLE")
 {
@@ -82,6 +84,7 @@ TEST_CASE("Testing Remove/Exists SIMPLE")
 	testingTrie.print(cout);
 }
 
+
 TEST_CASE("Testing Rest of Word")
 {
 	// we should be able to insert words into the trie
@@ -93,21 +96,42 @@ TEST_CASE("Testing Rest of Word")
 	testingTrie.insert("they");
 
 	// look at predicted words
-	std::cout << testingTrie.restOfWord("t") << std::endl;
+	vector<string> rest = testingTrie.restOfString("t");
+	for (auto i = rest.begin(); i != rest.end(); ++i)
+		cout << *i << ' ';
+	cout << endl;
 
 	// add words and check these too
 	testingTrie.insert("a");
 	testingTrie.insert("albert");
 	testingTrie.insert("anna");
-	std::cout << testingTrie.restOfWord("a") << std::endl;
-	std::cout << testingTrie.restOfWord("b") << std::endl;
-	testingTrie.print(std::cout);
+	rest = testingTrie.restOfString("a");
+	for (auto i = rest.begin(); i != rest.end(); ++i)
+		cout << *i << ' ';
+	cout << endl;
+
+	rest = testingTrie.restOfString("b");
+	for (auto i = rest.begin(); i != rest.end(); ++i)
+		cout << *i << ' ';
+	cout << endl;
+
+	testingTrie.print(cout);
 
 	// quick test of remove all
 	testingTrie.removeAll();
 	REQUIRE(testingTrie.size()== 0);
 	REQUIRE(testingTrie.totalNodes() == 0);
+
+	testingTrie.insert("yo");
+	testingTrie.insert("you");
+	testingTrie.insert("your");
+	testingTrie.insert("yours");
+	rest = testingTrie.restOfString("yo");
+	for (auto i = rest.begin(); i != rest.end(); ++i)
+		cout << *i << ' ';
+	cout << endl;
 }
+
 
 TEST_CASE("HUGE DICTIONARY")
 { 

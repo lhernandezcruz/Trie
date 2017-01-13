@@ -12,7 +12,9 @@
 #define TRIE_HPP_INCLUDED 1
 
 #include <string>
-#include <map>
+#include <vector>
+#include <unordered_map>
+#include <memory>
 #include <iostream>
 
 /// how many words we can remove before we remove unused nodes
@@ -40,28 +42,27 @@ public:
 	bool exists(std::string word);
 
 	/**
-	* \brief			Tries to guess the rest of the word
-	* \param  prefix    Prefix of the word that is being searched
-	* \return			Possible words that prefix could be
-	* 				      format: prefix: predicted words (alphabetical order)
+	* \brief			Tries to guess the rest of the string
+	* \param  prefix    Prefix of the string that is being searched
+	* \return			a vector with strings in which the input is a prefix
 	*/
-	std::string restOfWord(std::string prefix);
+	std::vector<std::string> restOfString(std::string prefix);
 
 	/**
 	* \brief			Remove a string from the trie
-	* \param  word      Word being removed
+	* \param  word      string being removed
 	* \return			true if word is removed from trie. false otherwise
 	*/
 	bool remove(std::string word);
 
 	/**
-	* \brief			Remove all words from trie
+	* \brief			Remove all strings from trie
 	*/
 	void removeAll();
 
 	/**
 	* \brief			Gives the size of the trie
-	* \return			amound of 'words' in trie
+	* \return			amount of strings in trie
 	*/
 	size_t size() const;
 
@@ -111,23 +112,23 @@ private:
 	bool subTrieExists(Node& subNode, std::string word);
 
 	/**
-	* \brief			Returns words that contain the input word as a prefix
+	* \brief			Returns strings that contain the input string as a prefix
 	* \param  subNode	which node we are looking to see if word can be completed
-	*         prefix	word being completed
+	*         prefix	string being completed
 	*		  currWord  current word being predicted
-	*		  output    string that will ultimately be returned. 
-	* \return           a string in the format. prefix: predicted words (in alphabetical order)
+	*		  output    a vector that contains predicted words 
+	* \return           a vector with predicted words
 	*/
-	std::string restOfWord(const Node& subNode, std::string prefix
-									,std::string currWord, std::string output) const;
+	std::vector<std::string> restOfString(const Node& subNode, std::string prefix
+									,std::string currWord, std::vector<std::string> output) const;
 
 	/**
 	* \brief			Insert a string into a subTrie
 	* \param  subNode	which node we are looking to insert word to
-	*         word	    word being inserted
+	*         word	    string being inserted
 	* \return           true if word was unmarked (it existed as a word)
 	*/
-	bool unmarkEndOfWord(Node& subNode, std::string word);
+	bool unmarkEndOfString(Node& subNode, std::string word);
 
 	/**
 	* \brief			Remove Nodes that are not part of words
@@ -157,8 +158,8 @@ private:
 	private:
 		friend class Trie; // trie can see private data members
 
-		bool endOfWord_; // true if a node represents end of word
-		std::map<char, Node> children_; // map of children nodes
+		bool endOfString_; // true if a node represents end of string
+		std::unordered_map<char, std::shared_ptr<Node> > children_; // map of children nodes
 	};
 	
 	/// private data members
