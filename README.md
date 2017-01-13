@@ -19,7 +19,14 @@ int main ()
   simpleEx.insert("your");
   simpleEx.insert("yours");
   simpleEx.insert("abc");
-  std::cout << simpleEx.restOfWord("yo") << std::endl; // should print yo: you your yours
+
+  // the following lines should print "you your yours"
+  vector<string> rest = testingTrie.restOfString("yo");
+	for (auto i = rest.begin(); i != rest.end(); ++i){
+		cout << *i << ' ';
+	}
+  cout << endl;
+  
   return 0;
 }
 ```
