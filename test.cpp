@@ -96,14 +96,14 @@ TEST_CASE("Testing Rest of Word")
 	testingTrie.insert("they");
 
 	// look at predicted words
-	std::cout << testingTrie.restOfWord("t") << std::endl;
+	std::cout << testingTrie.restOfString("t") << std::endl;
 
 	// add words and check these too
 	testingTrie.insert("a");
 	testingTrie.insert("albert");
 	testingTrie.insert("anna");
-	std::cout << testingTrie.restOfWord("a") << std::endl;
-	std::cout << testingTrie.restOfWord("b") << std::endl;
+	std::cout << testingTrie.restOfString("a") << std::endl;
+	std::cout << testingTrie.restOfString("b") << std::endl;
 	testingTrie.print(std::cout);
 
 	// quick test of remove all
@@ -115,7 +115,7 @@ TEST_CASE("Testing Rest of Word")
 	testingTrie.insert("you");
 	testingTrie.insert("your");
 	testingTrie.insert("yours");
-	cout << testingTrie.restOfWord("yo") << endl;
+	cout << testingTrie.restOfString("yo") << endl;
 }
 
 
