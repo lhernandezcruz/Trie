@@ -44,7 +44,7 @@ A node contains an unordered map with char keys and the values are shared pointe
 
 This trie implementation allows for O(l) search and insert time where l is the length of string being searched for. When inserting it travels from node to child node based on the chars from the input string adding nodes when necessary. Once it inserts that last char it will mark it as the end. When searching for a string each char is must inside the node and the last char must be marked as the end of the word. Using a map that stores the value of a node and its children nodes allows for O(1) search time between nodes resulting in O(l) insert and search time.
 
-RestOfWord makes it to the end of the input string and searches child nodes for larger strings. This means that it takes O(l) time to find the end of the word and O(n) time searching children nodes. Best case is O(l) (it is not a substring of anything) worst case is O(n) (input an empty string). It will return a string with words that contain the input as a prefix. Ex: "yo: you your yours".
+RestOfWord makes it to the end of the input string and searches child nodes for larger strings. This means that it takes O(l) time to find the end of the word and O(n) time searching children nodes. Best case is O(l) (it is not a substring of anything) worst case is O(n) (input an empty string). It will return a vector of with strings that contain the input as a prefix. Ex: inputing "yo" could return a vector with "you", "your", and "yours".
 
 Remove makes it to the end of the input string and unmarks it as the end of a word. After a certain amount of words have been removed any used nodes will get removed. This allows for removing to be O(l) the majority of the time, where l is the length of the string being removed. 
 

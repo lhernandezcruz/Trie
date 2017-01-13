@@ -103,15 +103,15 @@ bool Trie::subTrieExists(Node& subNode, std::string word)
 	}
 }
 
-std::string Trie::restOfString(std::string prefix)
+std::vector<std::string> Trie::restOfString(std::string prefix)
 {
 	// find rest of word
-	std::string output = prefix + ": ";
+	std::vector<std::string> output = std::vector<std::string>();
 	return restOfString(root_, prefix, "", output);
 }
 
-std::string Trie::restOfString(const Node& subNode, std::string prefix,
-									std::string currWord, std::string output) const
+std::vector<std::string> Trie::restOfString(const Node& subNode, std::string prefix,
+									std::string currWord, std::vector<std::string> output) const
 {
 	// base case we found the end of the word
 	if (prefix.size() == 0) {
@@ -120,9 +120,8 @@ std::string Trie::restOfString(const Node& subNode, std::string prefix,
 		while (i != subNode.children_.end()) {
 			std::string word =  currWord + i->first;
 			if (i->second->endOfString_) {
-				// check rest of the word
-				output += word;
-				output += " ";
+				// add word to output
+				output.push_back(word);
 			}
 
 			output = restOfString(*i->second, prefix, word, output);
@@ -271,7 +270,11 @@ std::ostream& Trie::print(std::ostream& out) const
 {
 	// find all the words inside the trie
 	std::string blank = "";
-	out << restOfString(root_, blank, blank, blank);
+	std::vector<std::string> output = std::vector<std::string>();
+	output = restOfString(root_, blank, blank, output);
+	for (auto i = output.begin(); i != output.end(); ++i) {
+		out << *i << ' ';
+	}
 	out << std::endl;
 	return out;
 }

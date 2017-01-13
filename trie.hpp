@@ -12,7 +12,7 @@
 #define TRIE_HPP_INCLUDED 1
 
 #include <string>
-#include <map>
+#include <vector>
 #include <unordered_map>
 #include <memory>
 #include <iostream>
@@ -44,10 +44,9 @@ public:
 	/**
 	* \brief			Tries to guess the rest of the string
 	* \param  prefix    Prefix of the string that is being searched
-	* \return			Possible strings that prefix could be
-	* 				      format: prefix: predicted strings
+	* \return			a vector with strings in which the input is a prefix
 	*/
-	std::string restOfString(std::string prefix);
+	std::vector<std::string> restOfString(std::string prefix);
 
 	/**
 	* \brief			Remove a string from the trie
@@ -117,11 +116,11 @@ private:
 	* \param  subNode	which node we are looking to see if word can be completed
 	*         prefix	string being completed
 	*		  currWord  current word being predicted
-	*		  output    string that will ultimately be returned. 
-	* \return           a string in the format. prefix: predicted words
+	*		  output    a vector that contains predicted words 
+	* \return           a vector with predicted words
 	*/
-	std::string restOfString(const Node& subNode, std::string prefix
-									,std::string currWord, std::string output) const;
+	std::vector<std::string> restOfString(const Node& subNode, std::string prefix
+									,std::string currWord, std::vector<std::string> output) const;
 
 	/**
 	* \brief			Insert a string into a subTrie
