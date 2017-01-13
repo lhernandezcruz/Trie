@@ -37,7 +37,7 @@ int main ()
  * showStatistics
  * print
 
-### Trie Explanation
+### Trie Implementation Explanation
 The trie contains a Node root_, size_t size_, size_t wordsRemoved_. Size_ is the amount of words that are contained in the trie. WordsRemoved_ is the amount of words that have been removed since unused nodes were removed. Node root_ is the node that represents the root node of the trie. 
 
 A node contains an unordered map with char keys and the values are shared pointers to other nodes. The map is essentially the nodes childrens, where the keys are chars that the children contain, and the values are the nodes of that children map. Shared pointers were used because incomplete types are not allowed in unordered maps and allow for simple implementation. They also contain a bool value that tells the node if it is the last char in a word. 
