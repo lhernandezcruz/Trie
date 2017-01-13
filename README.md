@@ -9,6 +9,7 @@ First you must include the header file. After that you can declare the Trie and 
 
 ```c++
 #include "trie.hpp"
+using namespace std;
 
 int main ()
 {
@@ -23,7 +24,7 @@ int main ()
   // the following lines should print "you your yours"
   vector<string> rest = testingTrie.restOfString("yo");
 	for (auto i = rest.begin(); i != rest.end(); ++i){
-		cout << *i << ' ';
+		out << *i << ' ';
 	}
   cout << endl;
   
