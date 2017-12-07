@@ -5,7 +5,7 @@ CFLAGS= /EHsc -W4
 ###############################################################################
 # Targets to help with testing
 ###############################################################################
-TARGETS=  myTest simpleEx
+TARGETS=  myTest autoComplete
 
 all: $(TARGETS)
 

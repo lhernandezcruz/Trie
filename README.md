@@ -3,9 +3,9 @@
 ## Trie
 This is an implementation of a trie. A sample usage of a trie is autocompletion of words. Words sometimes have the same prefixes such as 'you', 'your', and 'yours' share the prefix 'yo'. A trie would allow one to complete words that start with 'yo' very quickly. A trie is very useful when things share common prefixes.
 
-### Usage:
+### Usage of Trie:
 
-First you must include the header file. After that you can declare the Trie and use the functions that are provided.
+Simplest Example of Trie:
 
 ```c++
 #include <vector>
@@ -32,6 +32,15 @@ int main ()
   return 0;
 }
 ```
+
+### Usage of autoComplete:
+Compile autoCompleteExample.cpp
+
+From there you run the executable which takes in a file to a dictionary of words. smallDic.txt and google-10000-english.txt have been provided.
+Ex: sampleUsage smallDic.txt
+From there you can try words and see what is autocompleted.
+
+![AutoCompelte Example Image](images/autoCompleteEx.PNG?raw=true "AutoComplete Example")
 
 ### Operation provided:
 
