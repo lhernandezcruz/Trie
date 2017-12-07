@@ -8,13 +8,14 @@ This is an implementation of a trie. A sample usage of a trie is autocompletion 
 First you must include the header file. After that you can declare the Trie and use the functions that are provided.
 
 ```c++
+#include <vector>
 #include "trie.hpp"
 using namespace std;
 
 int main ()
 {
   // default constructor
-  Trie simpleEx = trie();
+  Trie simpleEx = Trie();
   simpleEx.insert("yo");
   simpleEx.insert("you");
   simpleEx.insert("your");
@@ -22,10 +23,10 @@ int main ()
   simpleEx.insert("abc");
 
   // the following lines should print "you your yours"
-  vector<string> rest = testingTrie.restOfString("yo");
-	for (auto i = rest.begin(); i != rest.end(); ++i){
-		out << *i << ' ';
-	}
+  vector<string> rest = simpleEx.restOfString("yo");
+ for (auto i = rest.begin(); i != rest.end(); ++i){
+	cout << *i << ' ';
+ }
   cout << endl;
   
   return 0;

@@ -5,7 +5,6 @@
 *
 * \brief Implemententation for Trie.hpp
 */
-
 #include "trie.hpp"
 
 ///////////////////////////////////////////////////////////////
@@ -51,7 +50,8 @@ void Trie::subTrieInsert(Node& subNode, std::string word)
 			++size_;
 		}
 
-	} else {
+	}
+	else {
 		// inserting a word that is longer than 1 char
 
 		std::string rest = word.substr(1);
@@ -97,7 +97,7 @@ bool Trie::subTrieExists(Node& subNode, std::string word)
 			// search for rest of word
 			return subTrieExists(*found->second, rest);
 		}
-		
+
 		// character not in trie. means word does not exist in trie
 		return false;
 	}
@@ -111,14 +111,14 @@ std::vector<std::string> Trie::restOfString(std::string prefix)
 }
 
 std::vector<std::string> Trie::restOfString(const Node& subNode, std::string prefix,
-									std::string currWord, std::vector<std::string> output) const
+	std::string currWord, std::vector<std::string> output) const
 {
 	// base case we found the end of the word
 	if (prefix.size() == 0) {
 		// keep searching sub nodes for words
 		auto i = subNode.children_.begin();
 		while (i != subNode.children_.end()) {
-			std::string word =  currWord + i->first;
+			std::string word = currWord + i->first;
 			if (i->second->endOfString_) {
 				// add word to output
 				output.push_back(word);
@@ -169,13 +169,13 @@ bool Trie::unmarkEndOfString(Node& subNode, std::string word)
 			found->second->endOfString_ = false;
 			--size_;
 			++wordsRemoved_;
-			
+
 			// check if we need to remove unused nodes
-			if (wordsRemoved_ == MAXWORDSREMOVED || empty()) {
+			if (wordsRemoved_ == MAXWORDSREMOVED) {
 				removeUnusedNodes(root_); // removing unused nodes
 				wordsRemoved_ = 0;
 			}
-		
+
 			// finished unmarking end of word
 			return true;
 		}
@@ -207,7 +207,7 @@ bool Trie::removeUnusedNodes(Node& subNode)
 	while (node != subNode.children_.end()) {
 		// search to see if we need to remove subNode
 		bool keepSubNode = removeUnusedNodes(*node->second);
-		
+
 		// we do not contain end of word... and no child does either
 		if (!node->second->endOfString_ && !keepSubNode) {
 			node = subNode.children_.erase(node);
@@ -219,7 +219,7 @@ bool Trie::removeUnusedNodes(Node& subNode)
 			keepNodes = true;
 		}
 	}
-		
+
 	// return whether we should keep nodes or not
 	return keepNodes;
 }
@@ -284,8 +284,7 @@ std::ostream& Trie::print(std::ostream& out) const
 ///////////////////////////////////////////////////////////////
 
 Trie::Node::Node()
-	: endOfString_ { false }, children_{ std::unordered_map<char, std::shared_ptr<Node>>() }
+	: endOfString_{ false }, children_{ std::unordered_map<char, std::shared_ptr<Node>>() }
 {
 	// nothing to do here
 }
-

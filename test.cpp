@@ -1,7 +1,7 @@
 #define CATCH_CONFIG_MAIN  // This tells Catch to provide a main() - only do this in one cpp file
 #include "catch.hpp"
 
-// include trie
+#include <fstream> //ifstream
 #include "trie.hpp"
 using namespace std;
 
@@ -57,29 +57,29 @@ TEST_CASE("Testing Remove/Exists SIMPLE")
 	REQUIRE(testingTrie.empty());
 	REQUIRE(!testingTrie.exists("hello"));
 	// nodes not removed yet
-	REQUIRE(testingTrie.totalNodes() == 0);
+	REQUIRE(testingTrie.totalNodes() != 0);
 	
 	// cant remove the same word
 	REQUIRE(!testingTrie.remove("hello"));
 
 	// insert stuff to testingTrie
 	testingTrie.insert("he");
-	REQUIRE(testingTrie.totalNodes() == 2);
-	testingTrie.insert("abc");
 	REQUIRE(testingTrie.totalNodes() == 5);
+	testingTrie.insert("abc");
+	REQUIRE(testingTrie.totalNodes() == 8);
 	testingTrie.insert("gg");
-	REQUIRE(testingTrie.totalNodes() == 7);
+	REQUIRE(testingTrie.totalNodes() == 10);
 	testingTrie.insert("you");
 	testingTrie.insert("your");
-	REQUIRE(testingTrie.totalNodes() == 11);
+	REQUIRE(testingTrie.totalNodes() == 14);
 
 	// remove words from testingTrie
-	testingTrie.remove("he"); // 1
-	REQUIRE(testingTrie.totalNodes() == 11);
-	testingTrie.remove("you"); // 2
-	REQUIRE(testingTrie.totalNodes() == 11);
-	testingTrie.remove("gg"); // 3 remove. will delete unused nodes
-	REQUIRE(testingTrie.totalNodes() == 11);
+	testingTrie.remove("he");
+	REQUIRE(testingTrie.totalNodes() == 14);
+	testingTrie.remove("you"); 
+	REQUIRE(testingTrie.totalNodes() == 14);
+	testingTrie.remove("gg");
+	REQUIRE(testingTrie.totalNodes() == 14);
 	testingTrie.showStatistics(cout);
 	testingTrie.print(cout);
 }
@@ -141,7 +141,8 @@ TEST_CASE("HUGE DICTIONARY")
 	// Open provided file
 	ifstream inFile("google-10000-english.txt");
 	if (!inFile) {
-		cerr << "Couldn't open file" << endl;
+		cerr << "Couldn't open file. Exiting" << endl;
+		exit(1);
 	}
 	// Read data from the file, one item per line
 	// and insert each word into the testingTrie
@@ -156,7 +157,8 @@ TEST_CASE("HUGE DICTIONARY")
 	// require that none have been deleted so far
 	ifstream inFile2("google-10000-english.txt");
 	if (!inFile2) {
-		cerr << "Couldn't open file... rip" << endl;
+		cerr << "Couldn't open file. Exiting" << endl;
+		exit(1);
 	}
 	string line2;
 	while (inFile2.good()) {
@@ -168,7 +170,8 @@ TEST_CASE("HUGE DICTIONARY")
 	// require that we can delete all of the words
 	ifstream inFile3("google-10000-english.txt");
 	if (!inFile3) {
-		cerr << "Couldn't open file... rip" << endl;
+		cerr << "Couldn't open file. Exiting" << endl;
+		exit(1);
 	}
 	string line3;
 	size_t totalNodes = testingTrie.totalNodes();
@@ -182,7 +185,7 @@ TEST_CASE("HUGE DICTIONARY")
 		++removeCount;
 
 		// check that nodes are removed only everyonce in a while
-		if (removeCount != MAXWORDSREMOVED && !testingTrie.empty()) {
+		if (removeCount != MAXWORDSREMOVED) {
 			// uneeded nodes are not deleted often
 			REQUIRE(totalNodes == testingTrie.totalNodes());
 		}

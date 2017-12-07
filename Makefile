@@ -1,19 +1,15 @@
 # Compiler and Flags to use
-CC=g++
-CFLAGS= -Wall -Wextra -pedantic
+CC=cl
+CFLAGS= /EHsc -W4 
 
 ###############################################################################
 # Targets to help with testing
 ###############################################################################
-TARGETS =  myTest 
+TARGETS=  myTest simpleEx
 
-all: test
-
-test: myTest
-	myTest
+all: $(TARGETS)
 
 clean:
-	del *.o
 	del *.exe
 	del *.obj
 
@@ -22,15 +18,8 @@ clean:
 # CREATING PROGRAMS
 ###############################################################################
 
-myTest: test.o trie.o
-	$(CC) $(CFLAGS) test.o trie.o -o myTest
+myTest:
+	$(CC) $(CFLAGS) test.cpp trie.cpp  /link /out:myTest.exe
 
-###############################################################################
-# CREATING Object Files
-###############################################################################
-
-test.o: test.cpp
-	$(CC) $(CFLAGS) -c test.cpp
-
-trie.o: trie.cpp trie.hpp
-	$(CC) $(CFLAGS) -c trie.cpp
+autoComplete:
+	$(CC) $(CFLAGS) autoCompleteExample.cpp trie.cpp /link /out:autoComplete.exe
